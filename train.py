@@ -1,11 +1,14 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from utils import generate_samples, split_data, BP_NeuralNetwork, train_and_validate, evaluate_model
+from utils import generate_samples, split_data, BP_NeuralNetwork, train_and_validate, evaluate_model, data_load
+
 # from sklearn.preprocessing import StandardScaler
 
 # 生成样本数据
-X, y = generate_samples(num_samples=1000, num_features=8)
+# X, y = generate_samples(num_samples=1000, num_features=8)
+mat = './mat/paras_8_272.mat'
+X, y = data_load(mat)
 
 # # 数据预处理（标准化）
 # scaler = StandardScaler()

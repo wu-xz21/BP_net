@@ -1,3 +1,4 @@
+import scipy.io
 import torch
 import torch.nn as nn
 import torch.optim as optim
@@ -5,6 +6,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_squared_error
 
+# 1. BP神经网络类
 class BP_NeuralNetwork(nn.Module):
     def __init__(self, input_size, hidden_size1, hidden_size2, output_size):
         super(BP_NeuralNetwork, self).__init__()
@@ -92,3 +94,11 @@ def evaluate_model(model, test_loader):
     # 计算均方误差
     mse = mean_squared_error(y_true, y_pred)
     print(f'Test MSE: {mse:.4f}')
+
+# 6. mat导入
+def data_load(mat):
+    mat_data = scipy.io.loadmat(mat)
+    data = mat_data['data']
+    X = data[:272,:8]
+    y = data[:272,8]
+    return X,y
