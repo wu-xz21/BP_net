@@ -99,6 +99,14 @@ def evaluate_model(model, test_loader):
 def data_load(mat):
     mat_data = scipy.io.loadmat(mat)
     data = mat_data['data']
-    X = data[:272,:8]
-    y = data[:272,8]
-    return X,y
+    x = data[:,:8]
+    y = data[:,8]
+    # 假设 X是输入，Y是输出
+    indices = np.arange(x.shape[0])
+    np.random.shuffle(indices)
+
+    # 按照打乱后的顺序重排
+    x_shuffled = x[indices]
+    y_shuffled = y[indices]
+
+    return x_shuffled,y_shuffled
