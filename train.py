@@ -30,9 +30,9 @@ train_data = torch.utils.data.TensorDataset(X_train_tensor, y_train_tensor)
 val_data = torch.utils.data.TensorDataset(X_val_tensor, y_val_tensor)
 test_data = torch.utils.data.TensorDataset(X_test_tensor, y_test_tensor)
 
-train_loader = torch.utils.data.DataLoader(train_data, batch_size=32, shuffle=True)
-val_loader = torch.utils.data.DataLoader(val_data, batch_size=32)
-test_loader = torch.utils.data.DataLoader(test_data, batch_size=32)
+train_loader = torch.utils.data.DataLoader(train_data, batch_size=16, shuffle=True)
+val_loader = torch.utils.data.DataLoader(val_data, batch_size=16)
+test_loader = torch.utils.data.DataLoader(test_data, batch_size=16)
 
 # 定义模型、损失函数和优化器
 input_size = 8  # 输入特征数量
