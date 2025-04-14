@@ -1,21 +1,21 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-from utils import generate_samples, split_data, BP_NeuralNetwork, train_and_validate, evaluate_model, data_load
 
-# from sklearn.preprocessing import StandardScaler
+from utils import generate_samples, split_data, BP_NeuralNetwork, train_and_validate, evaluate_model, data_load
+import joblib
+from sklearn.preprocessing import StandardScaler,MinMaxScaler
 
 # 生成样本数据
 # X, y = generate_samples(num_samples=1000, num_features=8)
-mat = './mat/paras_8_272.mat'
+mat = './mat/hyper_cube_data.mat'
 X, y = data_load(mat)
 
-# # 数据预处理（标准化）
-# scaler = StandardScaler()
-# X_scaled = scaler.fit_transform(X)
+scaler_x = StandardScaler()
+X_scaled = scaler_x.fit_transform(X)
 
 # 划分数据集
-X_train, X_val, X_test, y_train, y_val, y_test = split_data(X, y)
+X_train, X_val, X_test, y_train, y_val, y_test = split_data(X_scaled, y)
 
 # 转换为PyTorch张量
 X_train_tensor = torch.tensor(X_train, dtype=torch.float32)
@@ -36,12 +36,13 @@ test_loader = torch.utils.data.DataLoader(test_data, batch_size=32)
 
 # 定义模型、损失函数和优化器
 input_size = 8  # 输入特征数量
-hidden_size1 = 64  # 第一隐藏层神经元数量
-hidden_size2 = 32  # 第二隐藏层神经元数量
+hidden_size1 = 10  # 第一隐藏层神经元数量
+hidden_size2 = 10  # 第二隐藏层神经元数量
+hidden_size3 = 10
 output_size = 1  # 输出是一个数值
-model = BP_NeuralNetwork(input_size, hidden_size1, hidden_size2, output_size)
+model = BP_NeuralNetwork(input_size, hidden_size1, hidden_size2, hidden_size3, output_size)
 criterion = nn.MSELoss()  # 均方误差损失
-optimizer = optim.Adam(model.parameters(), lr=0.001)
+optimizer = optim.Adam(model.parameters(), lr=0.01)
 
 # 训练和验证模型
 train_and_validate(model, train_loader, val_loader, optimizer, criterion, num_epochs=100, patience=10)
@@ -50,6 +51,13 @@ train_and_validate(model, train_loader, val_loader, optimizer, criterion, num_ep
 evaluate_model(model, test_loader)
 
 # 保存模型参数
-torch.save(model.state_dict(), "bp_neural_network.pth")
+# 保存模型权重
+torch.save(model.state_dict(), 'bp_neural_network.pth')
+
+# 保存Scaler
+package = {
+    'scaler_x': scaler_x,
+}
+joblib.dump(package, 'scaler_x.pkl')
 
 
