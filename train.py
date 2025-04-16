@@ -1,13 +1,11 @@
 import torch
 import torch.nn as nn
 import torch.optim as optim
-
-from utils import generate_samples, split_data, BP_NeuralNetwork, train_and_validate, evaluate_model, data_load
-import joblib
+import numpy as np
+from utils import split_data, BP_NeuralNetwork, train_and_validate, evaluate_model, data_load, joblib
 from sklearn.preprocessing import StandardScaler,MinMaxScaler
 
-# 生成样本数据
-# X, y = generate_samples(num_samples=1000, num_features=8)
+# 导入样本数据
 mat = './mat/hyper_cube_data.mat'
 X, y = data_load(mat)
 
