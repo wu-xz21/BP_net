@@ -151,7 +151,7 @@ def monte_carlo_pass(x,optimize_T7,optimize_T8,model,scaler_x,target = 0.8):
     # print("pass_rate:",pass_rate)
     # 统计蒙特卡洛通过率，如果大于98%则计该公差带有效
     if pass_rate>0.95:
-        print("pass")
+        # print("pass")
         return 0
     else:
         return 1
@@ -161,7 +161,11 @@ def monte_carlo_pass(x,optimize_T7,optimize_T8,model,scaler_x,target = 0.8):
 def loss(x):
     C_t = np.exp(-x[0])+np.exp(-x[1])+np.exp(-x[2])+np.exp(-x[3])+np.exp(-x[4])+np.exp(-x[5])
     # print('Loss:',C_t)
-    return C_t
+    mean = np.mean(x)
+    alpha = 5
+    # 方差作为均衡性惩罚项，越均匀越小
+    balance_penalty = np.var(x)
+    return C_t + alpha * balance_penalty
 
 def tolerance(model, scaler_x, optimize_T7, optimize_T8):
 
@@ -178,12 +182,12 @@ def tolerance(model, scaler_x, optimize_T7, optimize_T8):
     if isinf(pso.best_y):
         raise OverflowError("请调整参数上下界ub和lb的范围，避免出现无穷大的情况")
 
-    plt.plot(pso.gbest_y_hist)
-    plt.title('PSO Result')
-    plt.xlabel('Iteration', fontsize=14)
-    plt.ylabel('Loss(s)', fontsize=14)
-    plt.grid()
-    plt.show()
+    # plt.plot(pso.gbest_y_hist)
+    # plt.title('PSO Result')
+    # plt.xlabel('Iteration', fontsize=14)
+    # plt.ylabel('Loss(s)', fontsize=14)
+    # plt.grid()
+    # plt.show()
     # 转成弧度
     X = pso.gbest_x/unit_trans_scaler
     y = pso.gbest_y

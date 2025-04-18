@@ -6,7 +6,7 @@ from utils import split_data, BP_NeuralNetwork, train_and_validate, evaluate_mod
 from sklearn.preprocessing import StandardScaler,MinMaxScaler
 
 # 导入样本数据
-mat = './mat/hyper_cube_data.mat'
+mat = './mat/all_data.mat'
 X, y = data_load(mat)
 
 scaler_x = StandardScaler()
@@ -50,7 +50,7 @@ evaluate_model(model, test_loader)
 
 # 保存模型参数
 # 保存模型权重
-torch.save(model.state_dict(), 'bp_neural_network.pth')
+torch.save(model.state_dict(), 'bp_alldata.pth')
 
 # 保存Scaler
 package = {
