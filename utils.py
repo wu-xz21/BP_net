@@ -13,12 +13,13 @@ from sko.PSO import PSO
 
 # 1. BP神经网络类
 class BP_NeuralNetwork(nn.Module):
-    def __init__(self, input_size, hidden_size1, hidden_size2,hidden_size3, output_size):
+    def __init__(self, input_size, hidden_size1, hidden_size2,hidden_size3,hidden_size4, output_size):
         super(BP_NeuralNetwork, self).__init__()
         self.fc1 = nn.Linear(input_size, hidden_size1)  # 输入层到第一隐藏层
         self.fc2 = nn.Linear(hidden_size1, hidden_size2)  # 第一隐藏层到第二隐藏层
         self.fc3 = nn.Linear(hidden_size2, hidden_size3)  # 第二隐藏层到输出层
-        self.fc4 = nn.Linear(hidden_size3, output_size)  # 第二隐藏层到输出层
+        self.fc4 = nn.Linear(hidden_size3, hidden_size4)  # 第二隐藏层到输出层
+        self.fc5 = nn.Linear(hidden_size4, output_size)  # 第二隐藏层到输出层
         self.relu = nn.ReLU()  # 激活函数
         self.sigmoid = nn.Sigmoid() #
 
@@ -30,6 +31,8 @@ class BP_NeuralNetwork(nn.Module):
         x = self.fc3(x)  # 通过第三层
         x = self.relu(x)  # 激活函数
         x = self.fc4(x)  # 通过第三层
+        x = self.relu(x)  # 激活函数
+        x = self.fc5(x)  # 通过第三层
         x = self.sigmoid(x)  # 最后一层，保证输出在0~1
         return x
 
@@ -151,7 +154,7 @@ def monte_carlo_pass(x,optimize_T7,optimize_T8,model,scaler_x,target = 0.8):
     # print("pass_rate:",pass_rate)
     # 统计蒙特卡洛通过率，如果大于98%则计该公差带有效
     if pass_rate>0.95:
-        # print("pass")
+        print("pass")
         return 0
     else:
         return 1

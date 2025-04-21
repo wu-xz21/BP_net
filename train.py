@@ -37,8 +37,9 @@ input_size = 8  # 输入特征数量
 hidden_size1 = 10  # 第一隐藏层神经元数量
 hidden_size2 = 10  # 第二隐藏层神经元数量
 hidden_size3 = 10
+hidden_size4 = 10
 output_size = 1  # 输出是一个数值
-model = BP_NeuralNetwork(input_size, hidden_size1, hidden_size2, hidden_size3, output_size)
+model = BP_NeuralNetwork(input_size, hidden_size1, hidden_size2, hidden_size3, hidden_size4, output_size)
 criterion = nn.MSELoss()  # 均方误差损失
 optimizer = optim.Adam(model.parameters(), lr=0.01)
 
@@ -50,7 +51,7 @@ evaluate_model(model, test_loader)
 
 # 保存模型参数
 # 保存模型权重
-torch.save(model.state_dict(), 'bp_alldata.pth')
+torch.save(model.state_dict(), 'bp_4layer_alldata.pth')
 
 # 保存Scaler
 package = {
