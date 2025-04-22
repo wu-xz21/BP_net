@@ -153,12 +153,67 @@ def monte_carlo_pass(x,optimize_T7,optimize_T8,model,scaler_x,target = 0.8):
     pass_rate = count/n_samples
     # print("pass_rate:",pass_rate)
     # 统计蒙特卡洛通过率，如果大于98%则计该公差带有效
-    if pass_rate>0.95:
+    if pass_rate>0.98:
         print("pass")
         return 0
     else:
         return 1
 
+
+def monte_carlo_pass_fixed_T7T8(x, optimize_T7, optimize_T8, model, scaler_x, target=0.8):
+    """
+    用于评估给定T7、T8时的蒙特卡洛通过率。
+    T1~T6按照上下界采样，T7/T8保持固定输入。
+
+    参数:
+    x : ndarray, shape(8,)，原始样本的上界信息，前6个用于采样上下界，后2个忽略
+    optimize_T7, optimize_T8 : 固定的T7/T8输入值
+    model : 已训练好的模型
+    scaler_x : 训练用Scaler
+    target : 判定阈值，默认0.8
+
+    返回:
+    0：通过；1：不通过。
+    """
+    # T1~T6采样范围
+    lower_bounds = np.array([0, 0, 0, 0, -x[4], -x[5]])  # 6维
+    upper_bounds = np.array([x[0], x[1], x[2], x[3], 0, 0])  # 6维
+    mean = (lower_bounds + upper_bounds) / 2
+    std_dev = (upper_bounds - lower_bounds) / 4
+
+    n_samples = 30000  # 蒙特卡洛采样数量
+    np.random.seed(2024)  # 固定采样种子
+    samples_t1_t6 = np.random.normal(loc=mean, scale=std_dev, size=(n_samples, 6))
+
+    # T7和T8保持固定值，扩展成数组
+    T7_column = np.full((n_samples, 1), optimize_T7)
+    T8_column = np.full((n_samples, 1), optimize_T8)
+
+    # 拼接完整输入
+    samples = np.hstack((samples_t1_t6, T7_column, T8_column))  # shape = (n_samples, 8)
+
+    # ------------------- 标准化输入 ------------------- #
+    samples_scaled = scaler_x.transform(samples)
+
+    # 转为 PyTorch 张量
+    samples_tensor = torch.tensor(samples_scaled, dtype=torch.float32)
+
+    # ------------------- 模型预测 ------------------- #
+    model.eval()
+    with torch.no_grad():
+        predictions = model(samples_tensor)
+
+    # 统计通过率
+    count = torch.sum(predictions > target).item()
+    pass_rate = count / n_samples
+
+    # 判定结果
+    if pass_rate > 0.98:
+        print(f"pass (rate={pass_rate:.4f})")
+        return 0
+    else:
+        print(f"fail (rate={pass_rate:.4f})")
+        return 1
 
 # 代价函数
 def loss(x):
