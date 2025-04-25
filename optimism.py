@@ -6,12 +6,12 @@ package = joblib.load('scaler_x.pkl')
 scaler_x = package['scaler_x']
 
 # 初始化模型结构
-model = BP_NeuralNetwork(input_size=8, hidden_size1=10, hidden_size2=10, hidden_size3=10, hidden_size4 = 10,output_size=1)
-model.load_state_dict(torch.load("bp_4layer_alldata.pth", weights_only=True))
+model = BP_NeuralNetwork(input_size=8, hidden_size1=10, hidden_size2=10, hidden_size3=10, hidden_size4 = 10,output_size=3)
+model.load_state_dict(torch.load("bp_3output_4layer.pth", weights_only=True))
 model.eval()  # 切换到评估模式
 
 # ------------------- 准备新数据 ------------------- #
-X, y = tolerance(model, scaler_x,0.3,0.3)
+X, y = tolerance(model, scaler_x,0.4,0.4)
 
 
 

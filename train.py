@@ -6,7 +6,7 @@ from utils import split_data, BP_NeuralNetwork, train_and_validate, evaluate_mod
 from sklearn.preprocessing import StandardScaler,MinMaxScaler
 
 # 导入样本数据
-mat = './mat/all_data.mat'
+mat = './mat/3output_data.mat'
 X, y = data_load(mat)
 
 scaler_x = StandardScaler()
@@ -17,11 +17,11 @@ X_train, X_val, X_test, y_train, y_val, y_test = split_data(X_scaled, y)
 
 # 转换为PyTorch张量
 X_train_tensor = torch.tensor(X_train, dtype=torch.float32)
-y_train_tensor = torch.tensor(y_train, dtype=torch.float32).view(-1, 1)
+y_train_tensor = torch.tensor(y_train, dtype=torch.float32)
 X_val_tensor = torch.tensor(X_val, dtype=torch.float32)
-y_val_tensor = torch.tensor(y_val, dtype=torch.float32).view(-1, 1)
+y_val_tensor = torch.tensor(y_val, dtype=torch.float32)
 X_test_tensor = torch.tensor(X_test, dtype=torch.float32)
-y_test_tensor = torch.tensor(y_test, dtype=torch.float32).view(-1, 1)
+y_test_tensor = torch.tensor(y_test, dtype=torch.float32)
 
 # 创建数据加载器
 train_data = torch.utils.data.TensorDataset(X_train_tensor, y_train_tensor)
@@ -38,7 +38,7 @@ hidden_size1 = 10  # 第一隐藏层神经元数量
 hidden_size2 = 10  # 第二隐藏层神经元数量
 hidden_size3 = 10
 hidden_size4 = 10
-output_size = 1  # 输出是一个数值
+output_size = 3  # 输出是3个ACDC值
 model = BP_NeuralNetwork(input_size, hidden_size1, hidden_size2, hidden_size3, hidden_size4, output_size)
 criterion = nn.MSELoss()  # 均方误差损失
 optimizer = optim.Adam(model.parameters(), lr=0.01)
@@ -51,7 +51,7 @@ evaluate_model(model, test_loader)
 
 # 保存模型参数
 # 保存模型权重
-torch.save(model.state_dict(), 'bp_4layer_alldata.pth')
+torch.save(model.state_dict(), 'bp_3output_4layer.pth')
 
 # 保存Scaler
 package = {

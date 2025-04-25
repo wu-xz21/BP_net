@@ -105,9 +105,12 @@ def evaluate_model(model, test_loader):
             y_pred.extend(outputs.numpy())
 
     # 计算均方误差
+    y_ture = np.array(y_true)
+    y_pred = np.array(y_pred)
+
     mse = mean_squared_error(y_true, y_pred)
-    rmse = root_mean_squared_error(y_true, y_pred)
-    error = np.mean(np.abs((np.array(y_true)-np.array(y_pred))))
+    rmse = np.sqrt(mse)
+    error = np.mean(np.abs(y_true - y_pred))
     print(f'Test MSE: {mse:.4f}')
     print(f'Test mean error:{error:.4f}')
     print(f'Test RMSE:{rmse:.4f}')
@@ -117,7 +120,7 @@ def data_load(mat):
     mat_data = scipy.io.loadmat(mat)
     data = mat_data['data']
     x = data[:,:8]
-    y = data[:,8]
+    y = data[:,8:11]        # 后三层输出
     # 假设 X是输入，Y是输出
     indices = np.arange(x.shape[0])
     np.random.shuffle(indices)
@@ -149,14 +152,18 @@ def monte_carlo_pass(x,optimize_T7,optimize_T8,model,scaler_x,target = 0.8):
     # ------------------- 批量预测 ------------------- #
     with torch.no_grad():
         predictions = model(samples_tensor)
-    count = torch.sum(predictions > target).item()
-    pass_rate = count/n_samples
-    # print("pass_rate:",pass_rate)
-    # 统计蒙特卡洛通过率，如果大于98%则计该公差带有效
-    if pass_rate>0.98:
-        print("pass")
+
+    # 对每一列（即每个输出）判断通过率
+
+    predictions = predictions.numpy()
+    pass_rates = np.mean(predictions > target, axis=0)  # shape = (3,)
+
+    # 如果每一维度都大于 0.98 才通过
+    if np.all(pass_rates > 0.98):
+        print(f"pass (rates={pass_rates})")
         return 0
     else:
+        print(f"fail (rates={pass_rates})")
         return 1
 
 
@@ -203,16 +210,16 @@ def monte_carlo_pass_fixed_T7T8(x, optimize_T7, optimize_T8, model, scaler_x, ta
     with torch.no_grad():
         predictions = model(samples_tensor)
 
-    # 统计通过率
-    count = torch.sum(predictions > target).item()
-    pass_rate = count / n_samples
+    # 对每一列（即每个输出）判断通过率
+    predictions = predictions.numpy()
+    pass_rates = np.mean(predictions > target, axis=0)  # shape = (3,)
 
-    # 判定结果
-    if pass_rate > 0.98:
-        print(f"pass (rate={pass_rate:.4f})")
+    # 如果每一维度都大于 0.98 才通过
+    if np.all(pass_rates > 0.98):
+        print(f"pass (rates={pass_rates})")
         return 0
     else:
-        print(f"fail (rate={pass_rate:.4f})")
+        print(f"fail (rates={pass_rates})")
         return 1
 
 # 代价函数
