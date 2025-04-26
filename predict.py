@@ -76,7 +76,7 @@ for i in range(3):
     plt.plot([0, 1], [0, 1], 'r--', label='理想值 y = x')
     plt.xlabel('真实值', fontsize=10)
     plt.ylabel('预测值', fontsize=10)
-    plt.title(f'输出维度 {i+1}\nRMSE = {rmse_i:.4f}', fontsize=12)
+    plt.title(f'通道 {i+1}\nRMSE = {rmse_i:.4f}', fontsize=12)
     plt.legend()
     plt.grid(True)
 

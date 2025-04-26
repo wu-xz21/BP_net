@@ -2,6 +2,9 @@ import torch
 from utils import joblib,BP_NeuralNetwork, monte_carlo_pass_fixed_T7T8
 import numpy as np
 import matplotlib.pyplot as plt
+# 设置中文字体
+plt.rcParams['font.sans-serif'] = ['SimHei']  # 支持中文字体
+plt.rcParams['axes.unicode_minus'] = False    # 正常显示负号
 # 加载Scaler
 package = joblib.load('scaler_x.pkl')
 scaler_x = package['scaler_x']
@@ -53,9 +56,9 @@ plt.imshow(result_grid,
            vmin=0, vmax=1)
 
 plt.colorbar(label='Result (0=Pass, 1=Fail)')
-plt.xlabel('RX')
-plt.ylabel('RZ')
-plt.title('Monte Carlo Pass Result Grid')
+plt.xlabel('RX(mrad)')
+plt.ylabel('RZ(mrad)')
+plt.title('优化后的转角范围')
 plt.grid(True)
 plt.show()
 
