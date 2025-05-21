@@ -64,7 +64,7 @@ for ch in range(3):
                 result_grid_pred[ch, i, j] = 0 if avg_pred > 0.4 else 1
 
 # -------------------- 绘制实际值 -------------------- #
-fig_true, axes_true = plt.subplots(1, 3, figsize=(18, 5), constrained_layout=True)
+fig_true, axes_true = plt.subplots(1, 3, figsize=(10, 4), constrained_layout=True)
 fig_true.suptitle('Zemax仿真结果', fontsize=18)
 
 for ch in range(3):
@@ -72,15 +72,15 @@ for ch in range(3):
                               extent=[T7_unique[0]/unit_trans_scaler, T7_unique[-1]/unit_trans_scaler,
                                       T8_unique[0]/unit_trans_scaler, T8_unique[-1]/unit_trans_scaler],
                               origin='lower', cmap='RdYlGn', vmin=0, vmax=1)
-    axes_true[ch].set_title(f'通道{ch + 1}', fontsize=14)
-    axes_true[ch].set_xlabel('RX (T7)')
-    axes_true[ch].set_ylabel('RZ (T8)')
+    axes_true[ch].set_title(f'通道{ch + 1}', fontsize=16)
+    axes_true[ch].set_xlabel('RX (T7)', fontsize = 14)
+    axes_true[ch].set_ylabel('RZ (T8)', fontsize = 16)
     axes_true[ch].grid(True)
 
-fig_true.colorbar(im, ax=axes_true, orientation='vertical', label='结果 (0=通过, 1=不通过)')
-
+# fig_true.colorbar(im, ax=axes_true, orientation='vertical', label='结果 (0=通过, 1=不通过)')
+fig_true.savefig("true.png", dpi=300, bbox_inches='tight')
 # -------------------- 绘制预测值 -------------------- #
-fig_pred, axes_pred = plt.subplots(1, 3, figsize=(18, 5), constrained_layout=True)
+fig_pred, axes_pred = plt.subplots(1, 3, figsize=(10, 4), constrained_layout=True)
 fig_pred.suptitle('BP神经网络预测结果', fontsize=18)
 
 for ch in range(3):
@@ -88,13 +88,13 @@ for ch in range(3):
                               extent=[T7_unique[0]/unit_trans_scaler, T7_unique[-1]/unit_trans_scaler,
                                       T8_unique[0]/unit_trans_scaler, T8_unique[-1]/unit_trans_scaler],
                               origin='lower', cmap='RdYlGn', vmin=0, vmax=1)
-    axes_pred[ch].set_title(f'通道{ch + 1}', fontsize=14)
-    axes_pred[ch].set_xlabel('RX (T7)')
-    axes_pred[ch].set_ylabel('RZ (T8)')
+    axes_pred[ch].set_title(f'通道{ch + 1}', fontsize=16)
+    axes_pred[ch].set_xlabel('RX (T7)', fontsize = 14)
+    axes_pred[ch].set_ylabel('RZ (T8)', fontsize = 14)
     axes_pred[ch].grid(True)
 
-fig_pred.colorbar(im, ax=axes_pred, orientation='vertical', label='结果 (0=通过, 1=不通过)')
-
+# fig_pred.colorbar(im, ax=axes_pred, orientation='vertical', label='结果 (0=通过, 1=不通过)')
+fig_pred.savefig("bp_regression_vertical.png", dpi=300, bbox_inches='tight')
 plt.show()
 
 # 画出相应的混淆矩阵热图

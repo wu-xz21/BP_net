@@ -63,7 +63,7 @@ y_pred = predictions.flatten()  # shape: (N,)
 plt.rcParams['font.sans-serif'] = ['SimHei']  # 用黑体显示中文
 plt.rcParams['axes.unicode_minus'] = False   # 正确显示负号
 
-plt.figure(figsize=(15, 4))
+plt.figure(figsize=(12, 6))
 for i in range(3):
     y_true_i = y[:, i]
     y_pred_i = predictions[:, i]
@@ -74,12 +74,13 @@ for i in range(3):
     plt.subplot(1, 3, i + 1)
     plt.scatter(y_true_i, y_pred_i, alpha=0.6, color='dodgerblue', label='预测值')
     plt.plot([0, 1], [0, 1], 'r--', label='理想值 y = x')
-    plt.xlabel('真实值', fontsize=10)
-    plt.ylabel('预测值', fontsize=10)
-    plt.title(f'通道 {i+1}\nRMSE = {rmse_i:.4f}', fontsize=12)
+    plt.xlabel('真实值', fontsize=12)
+    plt.ylabel('预测值', fontsize=12)
+    plt.title(f'通道 {i+1}\nRMSE = {rmse_i:.4f}', fontsize=14)
     plt.legend()
     plt.grid(True)
 
-plt.suptitle('BP神经网络三输出预测效果', fontsize=16)
 plt.tight_layout(rect=[0, 0.03, 1, 0.95])
+
+plt.savefig("pred.png", dpi=300, bbox_inches='tight')
 plt.show()
